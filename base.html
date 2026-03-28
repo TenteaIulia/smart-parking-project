@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Smart Parking{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <img src="{{ url_for('static', filename='smartparking.png') }}" alt="logo" class="logo">
+                <span>Smart Parking</span>
+</div>
+            <div class="nav-links">
+                {% if session.get("user_id") %}
+                    <a href="{{ url_for('home') }}">Acasă</a>
+                    <a href="{{ url_for('my_reservations') }}">Rezervările mele</a>
+                    <a href="{{ url_for('barrier_access') }}">Punct acces</a>
+                    <a href="{{ url_for('barrier_exit') }}">Punct ieșire</a>
+                    {% if session.get("role") == "admin" %}
+                        <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+                    {% endif %}
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('register') }}">Register</a>
+                {% endif %}
+            </div>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="alert flash-message {{ category }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    <script>
+    setTimeout(() => {
+        const messages = document.querySelectorAll(".flash-message");
+
+        messages.forEach(msg => {
+            msg.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+            msg.style.opacity = "0";
+            msg.style.transform = "translateY(-10px)";
+
+            setTimeout(() => {
+                msg.remove();
+            }, 500);
+        });
+
+    }, 2000); // 2 secunde
+</script>
+</body>
+</html>

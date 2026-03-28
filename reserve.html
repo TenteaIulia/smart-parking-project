@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Rezervare - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Rezervare loc de parcare</h2>
+
+        {% if zone %}
+            <p class="subtitle">
+                <strong>Zonă:</strong> {{ zone.zone_name }}<br>
+                <strong>Descriere:</strong> {{ zone.location_description }}<br>
+                <strong>Locuri disponibile:</strong> {{ zone.available_spots }}<br>
+                <strong>Preț/oră:</strong> {{ zone.price_per_hour }} lei
+            </p>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            <label for="license_plate">Număr de înmatriculare</label>
+            <input
+                type="text"
+                id="license_plate"
+                name="license_plate"
+                placeholder="Ex: B123ABC"
+                required
+                oninput="this.value = this.value.toUpperCase()"
+            >
+
+            <label for="reservation_start">Data și ora începerii</label>
+            <input
+                type="datetime-local"
+                id="reservation_start"
+                name="reservation_start"
+                required
+            >
+
+            <label for="reservation_end">Data și ora finalizării</label>
+            <input
+                type="datetime-local"
+                id="reservation_end"
+                name="reservation_end"
+                required
+            >
+
+            <button type="submit">Confirmă rezervarea</button>
+        </form>
+
+        <p class="switch-link">
+            <a href="{{ url_for('home') }}">Înapoi la dashboard</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

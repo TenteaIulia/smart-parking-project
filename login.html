@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Autentificare</h2>
+        <p class="subtitle">Intră în contul tău pentru a continua.</p>
+
+        <form method="post" class="auth-form">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Introdu emailul" required>
+
+            <label for="password">Parolă</label>
+            <input type="password" id="password" name="password" placeholder="Introdu parola" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="switch-link">
+            Nu ai cont?
+            <a href="{{ url_for('register') }}">Creează unul</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

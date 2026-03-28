@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Rezervările mele - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="reservations-page">
+
+    <div class="welcome-header">
+        <h1>Rezervările mele</h1>
+        <p>Aici poți vedea toate rezervările tale.</p>
+    </div>
+
+    <div class="filter-bar">
+        <form method="GET" action="{{ url_for('my_reservations') }}">
+            <label for="status">Filtrează după status:</label>
+
+            <select name="status" id="status">
+                <option value="all" {% if selected_status == 'all' %}selected{% endif %}>Toate</option>
+                <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Active</option>
+                <option value="completed" {% if selected_status == 'completed' %}selected{% endif %}>Finalizate</option>
+                <option value="cancelled" {% if selected_status == 'cancelled' %}selected{% endif %}>Anulate</option>
+                <option value="expired" {% if selected_status == 'expired' %}selected{% endif %}>Expirate</option>
+            </select>
+
+            <button type="submit" class="filter-btn">Aplică</button>
+            <a href="{{ url_for('my_reservations') }}" class="reset-filter-btn">Resetează</a>
+        </form>
+    </div>
+
+    {% if reservations %}
+        <div class="reservations-table-wrapper">
+            <table class="reservations-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Zonă</th>
+                        <th>Număr auto</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Creat la</th>
+                        <th>Penalitate</th>
+                        <th>Notițe</th>
+                        <th>Status</th>
+                        <th>Total de plată</th>
+                        <th>Acțiune</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for reservation in reservations %}
+                    <tr>
+                        <td>{{ reservation.id }}</td>
+                        <td>{{ reservation.zone_name }}</td>
+                        <td>{{ reservation.license_plate }}</td>
+                        <td>{{ reservation.reservation_start.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ reservation.reservation_end.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ reservation.created_at.strftime('%Y-%m-%d %H:%M') if reservation.created_at else '-' }}</td>
+                        <td>{{ reservation.penalty_fee or 0 }} lei</td>
+                        <td>{{ reservation.notes or '-' }}</td>
+
+                        <td>
+                            <span class="status-badge {{ reservation.status }}">
+                                {% if reservation.status == 'active' %}
+                                    Activă
+                                {% elif reservation.status == 'completed' %}
+                                    Finalizată
+                                {% elif reservation.status == 'cancelled' %}
+                                    Anulată
+                                {% elif reservation.status == 'expired' %}
+                                    Expirată
+                                {% else %}
+                                    {{ reservation.status }}
+                                {% endif %}
+                            </span>
+                        </td>
+
+                        <td>
+                            {% if reservation.status == 'completed' %}
+                                {{ reservation.total_cost or 0 }} lei
+                            {% elif reservation.status == 'cancelled' or reservation.status == 'expired' %}
+                                {{ reservation.penalty_fee or 0 }} lei
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if reservation.status == 'active' %}
+                                <form method="post" action="{{ url_for('cancel_reservation', reservation_id=reservation.id) }}">
+                                    <button type="submit" class="cancel-btn">Anulează</button>
+                                </form>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>Nu există rezervări pentru filtrul selectat.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Punct ieșire - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Punct ieșire / Barieră</h2>
+        <p class="subtitle">
+            Introdu numărul de înmatriculare pentru a închide sesiunea și a calcula costul.
+        </p>
+
+        <form method="post" class="auth-form">
+            <label for="license_plate">Număr de înmatriculare</label>
+            <input
+                type="text"
+                id="license_plate"
+                name="license_plate"
+                placeholder="Ex: B123ABC"
+                required
+                oninput="this.value = this.value.toUpperCase()"
+            >
+
+            <button type="submit">Verifică ieșirea</button>
+        </form>
+
+        <p class="switch-link">
+            <a href="{{ url_for('home') }}">Înapoi la dashboard</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

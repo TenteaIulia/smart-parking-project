@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Punct acces - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Punct acces / Barieră</h2>
+        <p class="subtitle">
+            Dacă există o rezervare validă, accesul se face automat pe baza ei.
+            Dacă nu există, poți permite accesul fără rezervare alegând o zonă.
+        </p>
+
+        <form method="post" class="auth-form">
+            <label for="license_plate">Număr de înmatriculare</label>
+            <input
+                type="text"
+                id="license_plate"
+                name="license_plate"
+                placeholder="Ex: B123ABC"
+                required
+                oninput="this.value = this.value.toUpperCase()"
+            >
+
+            <label for="zone_id">Zonă (folosită doar dacă NU există rezervare)</label>
+            <select id="zone_id" name="zone_id">
+                <option value="">Selectează zona</option>
+                {% for zone in parking_zones %}
+                    <option value="{{ zone.id }}">
+                        {{ zone.zone_name }} - locuri disponibile: {{ zone.available_spots }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">Verifică acces</button>
+        </form>
+
+        <p class="switch-link">
+            <a href="{{ url_for('home') }}">Înapoi la dashboard</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

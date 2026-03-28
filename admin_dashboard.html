@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <h1>Admin Dashboard</h1>
+
+    <div class="filter-bar">
+    <form method="get" action="{{ url_for('admin_dashboard') }}">
+        <label for="reservation_status">Filtrează rezervările:</label>
+        <select name="reservation_status" id="reservation_status">
+            <option value="all" {% if reservation_status == 'all' %}selected{% endif %}>Toate</option>
+            <option value="active" {% if reservation_status == 'active' %}selected{% endif %}>Active</option>
+            <option value="completed" {% if reservation_status == 'completed' %}selected{% endif %}>Finalizate</option>
+            <option value="cancelled" {% if reservation_status == 'cancelled' %}selected{% endif %}>Anulate</option>
+            <option value="expired" {% if reservation_status == 'expired' %}selected{% endif %}>Expirate</option>
+        </select>
+
+        <label for="session_status">Filtrează sesiunile:</label>
+        <select name="session_status" id="session_status">
+            <option value="all" {% if session_status == 'all' %}selected{% endif %}>Toate</option>
+            <option value="active" {% if session_status == 'active' %}selected{% endif %}>Active</option>
+            <option value="finished" {% if session_status == 'finished' %}selected{% endif %}>Finalizate</option>
+        </select>
+
+        <button type="submit" class="filter-btn">Aplică</button>
+        <a href="{{ url_for('admin_dashboard') }}" class="reset-filter-btn">Resetează</a>
+    </form>
+</div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>Rezervări totale</h3>
+            <p>{{ stats.total_reservations }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Rezervări active</h3>
+            <p>{{ stats.active_reservations }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Rezervări expirate</h3>
+            <p>{{ stats.expired_reservations }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Rezervări anulate</h3>
+            <p>{{ stats.cancelled_reservations }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Rezervări completate</h3>
+            <p>{{ stats.completed_reservations }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Sesiuni totale</h3>
+            <p>{{ stats.total_sessions }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Locuri ocupate</h3>
+            <p>{{ stats.occupied_spots }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Venit sesiuni</h3>
+            <p>{{ stats.sessions_revenue }} lei</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Penalizări</h3>
+            <p>{{ stats.penalties_revenue }} lei</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Venit total</h3>
+            <p>{{ stats.total_revenue }} lei</p>
+        </div>
+    </div>
+
+    <h2>Rezervări recente</h2>
+    <div class="reservations-table-wrapper">
+        <table class="reservations-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Zonă</th>
+                    <th>Nr auto</th>
+                    <th>Status</th>
+                    <th>Penalty</th>
+                    <th>Notițe</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reservations %}
+                <tr>
+                    <td>{{ r.id }}</td>
+                    <td>{{ r.zone_name }}</td>
+                    <td>{{ r.license_plate }}</td>
+                    <td>{{ r.status }}</td>
+                    <td>{{ r.penalty_fee }} lei</td>
+                    <td>{{ r.notes or '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2>Sesiuni recente</h2>
+    <div class="reservations-table-wrapper">
+        <table class="reservations-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Zonă</th>
+                    <th>Nr auto</th>
+                    <th>Status</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in sessions %}
+                <tr>
+                    <td>{{ s.id }}</td>
+                    <td>{{ s.zone_name }}</td>
+                    <td>{{ s.license_plate }}</td>
+                    <td>{{ s.status }}</td>
+                    <td>{{ s.total_cost }} lei</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

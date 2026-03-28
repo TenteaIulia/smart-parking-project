@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Acasă - Smart Parking{% endblock %}
+
+{% block content %}
+
+
+<div class="dashboard-page">
+    <div class="welcome-header">
+        <h1>Bine ai venit, {{ full_name }}!</h1>
+        <p>Vezi mai jos zonele de parcare disponibile.</p>
+    </div>
+
+    <div class="zones-grid">
+        {% for zone in parking_zones %}
+            <div class="zone-card">
+                <div class="zone-card-header">
+                    <h3>{{ zone.zone_name }}</h3>
+                    <span class="status-badge {{ zone.status }}">{{ zone.status }}</span>
+                </div>
+
+                <p class="zone-description">{{ zone.location_description }}</p>
+
+                <div class="zone-details">
+                    <p><strong>Locuri totale:</strong> {{ zone.total_spots }}</p>
+                    <p><strong>Locuri disponibile:</strong> {{ zone.available_spots }}</p>
+                    <p><strong>Preț/oră:</strong> {{ zone.price_per_hour }} lei</p>
+                </div>
+
+                <div class="zone-actions">
+                    <a href="{{ url_for('reserve', zone_id=zone.id) }}" class="reserve-btn">Rezervă</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
